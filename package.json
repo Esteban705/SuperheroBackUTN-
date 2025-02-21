@@ -5,7 +5,9 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "mkdir -p build && cp -r src/* build/ && npm install --production",
+    "deploy": "npm run build && node build/app.js"
   },
   "engines": {
     "node": ">=14.0.0"
