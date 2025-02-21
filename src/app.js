@@ -30,6 +30,11 @@ app.use((req, res, next) => {
 // Rutas
 app.use('/api', routes);
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'OK', timestamp: new Date() });
+});
+
 // Iniciar conexión a MongoDB
 connectDB();
 
