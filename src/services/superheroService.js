@@ -5,7 +5,7 @@ class SuperheroService {
         const skip = (page - 1) * limit;
 
         const superheros = await Superhero.find()
-            .populate('creator', 'name company')
+            
             .skip(skip)
             .limit(limit);
 
@@ -22,7 +22,7 @@ class SuperheroService {
     }
 
     async getById(id) {
-        const superhero = await Superhero.findById(id).populate('creator', 'name company');
+        const superhero = await Superhero.findById(id);
         if (!superhero) {
             throw new Error('Superhéroe no encontrado');
         }
@@ -32,6 +32,7 @@ class SuperheroService {
     async create(superheroData) {
         const superhero = new Superhero(superheroData);
         await superhero.save();
+        superhero.id = superhero._id;
         return superhero;
     }
 

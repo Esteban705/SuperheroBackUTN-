@@ -1,9 +1,10 @@
+//creamos las rutas 
 const express = require('express');
 const router = express.Router();
-const { register, login } = require('../controllers/authController');
-const { registerValidation, loginValidation } = require('../middleware/validator');
+const { register } = require('../controllers/authController');
+const { login } = require('../controllers/authController');
 
-router.post('/register', registerValidation, register);
-router.post('/login', loginValidation, login);
+router.post('/register', register);
+router.post('/login', login);
 
 module.exports = router;

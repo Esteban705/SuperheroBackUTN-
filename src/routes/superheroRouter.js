@@ -7,21 +7,18 @@ const {
     updateSuperhero,
     deleteSuperhero
 } = require('../controllers/superheroController');
-const { superheroValidation } = require('../middleware/validator');
-const authMiddleware = require('../middleware/authMiddleware');
+const { authenticateToken, hasPermission } = require('../middleware/authMiddleware');
 
-router.get('/', getSuperheros);
-router.get('/:id', getSuperheroById);
-router.post('/', [
-    authMiddleware,
-    superheroValidation
-], createSuperhero);
-router.put('/:id', [
-    authMiddleware,
-    superheroValidation
-], updateSuperhero);
-router.delete('/:id', [
-    authMiddleware,
-], deleteSuperhero);
+// Rutas públicas
+//Verifricamos si el usuario tiene acceso y luego verificamos si tiene permisos
+router.get('/', authenticateToken, hasPermission('read:superheros'), getSuperheros);
+router.get('/:id', authenticateToken, hasPermission('read:superheros'), getSuperheroById);
+
+// Rutas protegidas
+router.post('/', authenticateToken, hasPermission('create:superheros'), createSuperhero);
+
+router.put('/:id', authenticateToken,hasPermission('update:superheros'), updateSuperhero);
+
+router.delete('/:id', authenticateToken, hasPermission('delete:superheros'), deleteSuperhero);
 
 module.exports = router;

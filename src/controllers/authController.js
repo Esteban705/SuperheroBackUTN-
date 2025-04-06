@@ -1,38 +1,23 @@
-const { validationResult } = require('express-validator');
+//Creamos un controlador para la autenticacion
 const authService = require('../services/authService');
-const { logger } = require('../config/logger');
 
 exports.register = async (req, res) => {
     try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
-
-        const { token, user } = await authService.register(req.body);
-        user.set('password', undefined)
-        res.status(201).json({ token, user });
+        const result = await authService.register(req.body);
+        res.status(201).json(result);
     } catch (error) {
-        logger.error('Error en registro:', error);
-        res.status(error.message === 'El usuario ya existe' ? 400 : 500)
-            .json({ message: error.message || 'Error en el servidor' });
+        console.log('Error en registro:', error);
+        res.status(400).json({ message: error.message });
     }
 };
 
 exports.login = async (req, res) => {
     try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
-
-
-        const { token, user } = await authService.login(req.body);
-        user.set('password', undefined)
-        res.json({ token, user });
+        const { email, password } = req.body;
+        const result = await authService.login(email, password);
+        res.json(result);
     } catch (error) {
-        logger.error('Error en login:', error);
-        res.status(error.message === 'Credenciales inválidas' ? 400 : 500)
-            .json({ message: error.message || 'Error en el servidor' });
+        console.log('Error en login:', error);
+        res.status(401).json({ message: error.message });
     }
 };
